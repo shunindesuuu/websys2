@@ -19,7 +19,7 @@
 						<?php if (!isset($_COOKIE['email'])): ?>
 				<?php else: ?>
 					<li>
-						<a>Welcome, <?php echo $_COOKIE['type'] . ' , ' . $_COOKIE['email'] . '' ?></a>
+						<a>Welcome, <?php echo $_COOKIE['type'] . '  ' . $_COOKIE['email'] . '' ?></a>
 					</li>
 					<li><a href="logout.php">Logout</a></li>
 					<?php endif ?>
