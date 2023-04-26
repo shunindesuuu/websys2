@@ -139,6 +139,9 @@
 					<li>
 						<a href="about.html">About Us</a>
 					</li>
+					<li>
+						<a href="calendar.php">Calendar</a>
+					</li>
 				</ul>
 			</div>
 			<div id="body">
