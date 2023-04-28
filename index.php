@@ -15,15 +15,32 @@
 				<a href="index.php"><img src="images/logo.png" alt="Image"></a>
 				<ul>
 					<li class="current">
-						<a href="index.php">Home</a>
+						<a href="index.php?user=logged_in">Home</a>
+						<!-- Welcome message -->
 						<?php if (!isset($_COOKIE['email'])): ?>
-				<?php else: ?>
-					<li>
-						<a>Welcome, <?php echo $_COOKIE['type'] . '  ' . $_COOKIE['email'] . '' ?></a>
-					</li>
-					<li><a href="logout.php">Logout</a></li>
+						<?php else: ?>
+						<li>
+							<a>Welcome,
+								<?php echo $_COOKIE['type'] . '  ' . $_COOKIE['email'] . '' ?>
+							</a>
+						</li>
+						<li><a href="logout.php">Logout</a></li>
 					<?php endif ?>
 					</li>
+					<li>
+						<!-- For checking if Admin or customer -->
+						<?php
+						if (isset($_COOKIE['type'])) {
+							if ($_COOKIE['type'] == 'admin') {
+								echo '<li><a href="calendar.php">Calendar</a></li>';
+							} elseif ($_COOKIE['type'] == 'customer') {
+								echo '<li><a href="menu.php">Menu</a></li>';
+								echo '<li><a href="cart.php">Cart</a></li>';
+							}
+						}
+						?>
+					</li>
+
 					<!-- php section -->
 
 					<div id="login_form">
@@ -43,20 +60,20 @@
 							$query = "SELECT * FROM user WHERE email='" . $_REQUEST['email'] . "'";
 							$result = mysql_query($query) or die(mysql_error());
 							$num_results = mysql_num_rows($result);
-						
+
 							if ($num_results == 0) {
 								// Check if this is the first registered user
 								$query = "SELECT * FROM user";
 								$result = mysql_query($query) or die(mysql_error());
 								$num_results = mysql_num_rows($result);
-								
+
 								$user_type = 'customer';
-								
+
 								if ($num_results == 0) {
 									// First registered user is admin
 									$user_type = 'admin';
 								}
-								
+								// If account is already registered
 								$query = "INSERT INTO user(email, paswrd, contact, custname, address, usertype, user_date, user_ip) VALUES('" . $_REQUEST['email'] . "', '" . $_REQUEST['password'] . "', '" . $_REQUEST['contact'] . "', '" . $_REQUEST['name'] . "' ,'" . $_REQUEST['address'] . "', '" . $user_type . "', '" . date("Y-m-d h:i:s") . "', '" . $_SERVER['REMOTE_ADDR'] . "')";
 								$result = mysql_query($query) or die(mysql_error());
 								echo "<meta http-equiv='refresh' content='0;url=index.php?action=login&#login_form'>";
@@ -65,7 +82,6 @@
 								echo '<script>alert("Account Already Registered")</script>';
 							}
 						}
-						
 
 						// End of Register
 						
@@ -79,8 +95,8 @@
 								echo '<meta http-equiv="refresh" content="0;url=index.php?action=register&#login_form">';
 							} else {
 								$row = mysql_fetch_array($result);
-								setcookie("email", $row['email'], time()+3600);
-								setcookie("type", $row['usertype'], time()+3600);
+								setcookie("email", $row['email'], time() + 3600);
+								setcookie("type", $row['usertype'], time() + 3600);
 								echo '<meta http-equiv="refresh" content="0,url=index.php?user=logged_in">';
 							}
 						}
@@ -126,11 +142,7 @@
 					</div>
 
 					<!-- end php section -->
-
-					<li>
-						<a href="menu.html">Menu</a>
-					</li>
-					<li>
+					<!-- <li>
 						<a href="locations.html">Locations</a>
 					</li>
 					<li>
@@ -138,10 +150,7 @@
 					</li>
 					<li>
 						<a href="about.html">About Us</a>
-					</li>
-					<li>
-						<a href="calendar.php">Calendar</a>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 			<div id="body">
