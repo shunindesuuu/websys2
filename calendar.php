@@ -173,13 +173,11 @@
                 echo "<table width=80% border=1><caption>$month_name $year</caption>";
 
                 // Print the table headers (days of the week)
-                echo "<tr>";
                 echo "<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>";
                 echo "<th>Thu</th><th>Fri</th><th>Sat</th>";
                 echo "</tr>";
 
                 // Start a new row for the first week
-                echo "<tr>";
 
                 // Print blank cells for the days before the first day of the month
                 for ($i = 0; $i < $first_day_index; $i++) {
@@ -199,7 +197,6 @@
 
                 // Print blank cells for the days after the last day of the month
                 for ($i = $num_days + $first_day_index; $i < 42; $i++) {
-                    echo "<td></td>";
                 }
 
                 // End the last row and the table

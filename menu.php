@@ -54,11 +54,11 @@
 					<span>Lorem ipsum dolor sit amet.</span>
 				</div>
 				<div>
-					<a href="menu.html" class="whatshot">What&#39;s Hot</a>
+					<a href="#" class="whatshot"></a>
 					<div>
 						<ul>
 							<li>
-								<a href="index.html"><img src="images/coffee1.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee1.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Lorem ipsum</a>
 									<p>
@@ -67,7 +67,7 @@
 								</div>
 							</li>
 							<li>
-								<a href="index.html"><img src="images/coffee2.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee2.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Dolor sit amet</a>
 									<p>
@@ -76,7 +76,7 @@
 								</div>
 							</li>
 							<li>
-								<a href="index.html"><img src="images/coffee3.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee3.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Donie quis</a>
 									<p>
@@ -84,8 +84,9 @@
 									</p>
 								</div>
 							</li>
+							<h1>Hot Brew</h1>
 							<li>
-								<a href="index.html"><img src="images/coffee4.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee4.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Lorem ipsum</a>
 									<p>
@@ -94,7 +95,7 @@
 								</div>
 							</li>
 							<li>
-								<a href="index.html"><img src="images/coffee5.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee5.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Dolor sit amet</a>
 									<p>
@@ -103,7 +104,7 @@
 								</div>
 							</li>
 							<li>
-								<a href="index.html"><img src="images/coffee6.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee6.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Donie quis</a>
 									<p>
@@ -111,8 +112,9 @@
 									</p>
 								</div>
 							</li>
+							<h1>Cold Brew</h1>
 							<li>
-								<a href="index.html"><img src="images/coffee3.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee3.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Lorem ipsum</a>
 									<p>
@@ -121,7 +123,7 @@
 								</div>
 							</li>
 							<li>
-								<a href="index.html"><img src="images/coffee2.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee2.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Dolor sit amet</a>
 									<p>
@@ -130,7 +132,7 @@
 								</div>
 							</li>
 							<li>
-								<a href="index.html"><img src="images/coffee1.jpg" alt="Image"></a>
+								<a href="#"><img src="images/coffee1.jpg" alt="Image"></a>
 								<div>
 									<a href="index.html">Donie quis</a>
 									<p>
