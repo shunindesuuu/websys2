@@ -56,8 +56,76 @@
                     <span>Cart</span>
                 </div>
                 <div>
-                    <div>
-                        <table id="cartTable">
+                    <?php
+                    session_start();
+                    $hostname = "localhost";
+                    $database = "Shopee";
+                    $db_login = "root";
+                    $db_pass = "";
+                    $dlink = mysqli_connect($hostname, $db_login, $db_pass, $database) or die("Could not connect");
+
+                    if (isset($_GET['prodid'])) {
+                        $prodid = $_GET['prodid'];
+
+                        // check if product is already in cart, if yes, update quantity, else add to cart
+                        if (isset($_SESSION['cart'][$prodid])) {
+                            $_SESSION['cart'][$prodid] += 1;
+                        } else {
+                            $_SESSION['cart'][$prodid] = 1;
+                        }
+                    }
+
+                    if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['prodid'])) {
+                        $prodid = $_GET['prodid'];
+                        unset($_SESSION['cart'][$prodid]);
+                    }
+
+                    // display the contents of the cart
+                    if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+                        echo '<table>';
+                        echo '<thead><tr><th>Product</th><th></th><th>Product Name</th><th>Price</th><th>Quantity</th><th>Total Price</th><th>Action</th></tr></thead>';
+                        echo '<tbody>';
+                        $total_price = 0;
+                        foreach ($_SESSION['cart'] as $prodid => $quantity) {
+                            // get the product details from the database
+                            $query = "SELECT * FROM Products WHERE prodid='$prodid'";
+                            $result = mysqli_query($dlink, $query);
+                            if (mysqli_num_rows($result) > 0) {
+                                $row = mysqli_fetch_assoc($result);
+
+                                // calculate the total price for this product
+                                $product_price = $row['curprice'] * $quantity;
+                                $total_price += $product_price;
+
+                                // display the product in the cart
+                                echo '<tr>';
+                                echo '<td><img src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></td>';
+                                echo '<td>' . $row['productdesc'] . '</td>';
+                                echo '<td>' . $row['productname'] . '</td>';
+                                echo '<td>$' . $row['curprice'] . '</td>';
+                                echo '<td><form method="post" action="update_quantity.php?prodid=' . $row['prodid'] . '"><select name="quantity">';
+                                for ($i = 1; $i <= 10; $i++) {
+                                    if ($i == $quantity) {
+                                        echo '<option value="' . $i . '" selected>' . $i . '</option>';
+                                    } else {
+                                        echo '<option value="' . $i . '">' . $i . '</option>';
+                                    }
+                                }
+                                echo '<td>$' . number_format($product_price, 2) . '</td>';
+                                echo '<td><a href="cart.php?action=delete&prodid=' . $row['prodid'] . '">Delete</a></td>';
+                                echo '</tr>';
+                            }
+                        }
+                        echo '<tr><td colspan="5" style="text-align:right">Total:</td><td>$' . number_format($total_price, 2) . '</td><td></td></tr>';
+                        echo '</tbody>';
+                        echo '</table>';
+                    } else {
+                        echo '<h1>Your shopping cart is empty</h1>';
+                    }
+                    mysqli_close($dlink);
+                    ?>
+                    <!-- <div> -->
+                    <!-- <table id="cartTable">
                             <thead>
                                 <tr>
                                     <th>Product</th>
@@ -86,8 +154,8 @@
                                     <td>$29.99</td>
                                 </tr>
                             </tbody>
-                        </table>
-                    </div>
+                        </table> -->
+                    <!-- </div> -->
                     <!-- <a href="menu.html" class="whatshot">What&#39;s Hot</a>
                     <div>
                         <ul>
