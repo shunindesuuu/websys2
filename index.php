@@ -32,6 +32,7 @@
 						<?php
 						if (isset($_COOKIE['type'])) {
 							if ($_COOKIE['type'] == 'admin') {
+								echo '<li><a href="customerorders.php">Cust Orders</a></li>';
 								echo '<li><a href="calendar.php">Calendar</a></li>';
 							} elseif ($_COOKIE['type'] == 'customer') {
 								echo '<li><a href="menu.php">Menu</a></li>';
