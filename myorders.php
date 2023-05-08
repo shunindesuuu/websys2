@@ -111,7 +111,7 @@
                     // Display the table with the filtered orders
                     if ($result && mysqli_num_rows($result) > 0) {
                         echo '<table id="myorders-table">';
-                        echo '<tr><th><a href="myorders.php?status=pending">Pending (' . $pendingCount . ')</a></th><th><a href="myorders.php?status=accepted">Accepted (' . $acceptedCount . ')</a></th><th><a href="myorders.php?status=completed">Completed (' . $completedCount . ')</a></th><th><a href="myorders.php?status=return-refund">Return/Refund (' . $returnRefundCount . ')</a></th></tr>';
+                        echo '<tr><th><a href="myorders.php?status=pending">Pending (' . $pendingCount . ')</a></th><th><a href="myorders.php?status=accepted">Accepted (' . $acceptedCount . ')</a></th><th><a href="myorders.php?status=completed">Completed (' . $completedCount . ')</a></th><th><a href="myorders.php?status=return/refund">Return/Refund (' . $returnRefundCount . ')</a></th></tr>';
                         echo '<tr><th>Product</th><th>Quantity</th><th>Description</th><th>Total</th><th>Date Ordered</th><th>Status</th></tr>';
 
                         // Initialize the total cost variable
@@ -144,7 +144,20 @@
                         echo '<tr><td></td><td colspan="2">Total Cost:</td><td id="total_cost">$' . number_format($totalCost, 2) . '</td>';
                         echo '</table>';
                     } else {
-                        echo '<tr><th><a href="myorders.php?status=pending">Pending (' . $pendingCount . ')</a></th><th><a href="myorders.php?status=accepted">Accepted (' . $acceptedCount . ')</a></th><th><a href="myorders.php?status=completed">Completed (' . $completedCount . ')</a></th><th><a href="myorders.php?status=return-refund">Return/Refund (' . $returnRefundCount . ')</a></th></tr>';
+
+                        echo '<table id="myorders-table">';
+                        echo '<tr><th><a href="myorders.php?status=pending">Pending (' . $pendingCount . ')</a></th><th><a href="myorders.php?status=accepted">Accepted (' . $acceptedCount . ')</a></th><th><a href="myorders.php?status=completed">Completed (' . $completedCount . ')</a></th><th><a href="myorders.php?status=/refund">Return/Refund (' . $returnRefundCount . ')</a></th></tr>';
+                        echo '<tr><th>Product</th><th>Quantity</th><th>Description</th><th>Total</th><th>Date Ordered</th><th>Status</th></tr>';
+                        echo '<tr>';
+                        echo '<td><img src="' . $product['productimage'] . '" alt="' . $product['productname'] . '"></td>';
+                        echo '<td>' . $row['quantity'] . '</td>';
+                        echo '<td>' . $product['productname'] . '<br>' . $product['productdesc'] . '</td>';
+                        echo '<td>$' . number_format($product['curprice'] * $row['quantity'], 2) . '</td>';
+                        echo '<td>' . $row['date'] . '</td>';
+                        echo '<td>' . $row['status'] . '</td>';
+                        echo '</tr>';
+                        echo '</table>';
+
                     }
 
                     // Close the result sets and the database connection

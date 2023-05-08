@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Yay&#39;Koffee Website Template</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/calendar.css">
 </head>
 
 <body>
@@ -27,132 +27,31 @@
                     <?php endif ?>
                     </li>
                     <li>
-                    <?php
-						if (isset($_COOKIE['type'])) {
-							if ($_COOKIE['type'] == 'admin') {
-								echo '<li><a href="calendar.php">Calendar</a></li>';
-							} elseif ($_COOKIE['type'] == 'customer') {
-								echo '<li><a href="menu.php">Menu</a></li>';
-								echo '<li><a href="cart.php">Cart</a></li>';
-							}
-						}
-						?>
-                    </li>
-                    <!-- php section -->
-
-                    <div id="login_form">
-
                         <?php
-                        // $hostname = "localhost";
-                        // $database = "Shopee";
-                        // $db_login = "root";
-                        // $db_pass = "";
-
-                        // $dlink = mysql_connect($hostname, $db_login, $db_pass) or die("Could not connect");
-                        // mysql_select_db($database) or die("Could not select database");
-
-                        // // Register
-                        
-                        // if ($_REQUEST['name'] != "" && $_REQUEST['email'] != "" && $_REQUEST['password'] != "" && $_REQUEST['contact'] != "" && $_REQUEST['address'] != "") {
-                        //     $query = "SELECT * FROM user WHERE email='" . $_REQUEST['email'] . "'";
-                        //     $result = mysql_query($query) or die(mysql_error());
-                        //     $num_results = mysql_num_rows($result);
-
-                        //     if ($num_results == 0) {
-                        //         // Check if this is the first registered user
-                        //         $query = "SELECT * FROM user";
-                        //         $result = mysql_query($query) or die(mysql_error());
-                        //         $num_results = mysql_num_rows($result);
-
-                        //         $user_type = 'customer';
-
-                        //         if ($num_results == 0) {
-                        //             // First registered user is admin
-                        //             $user_type = 'admin';
-                        //         }
-
-                        //         $query = "INSERT INTO user(email, paswrd, contact, custname, address, usertype, user_date, user_ip) VALUES('" . $_REQUEST['email'] . "', '" . $_REQUEST['password'] . "', '" . $_REQUEST['contact'] . "', '" . $_REQUEST['name'] . "' ,'" . $_REQUEST['address'] . "', '" . $user_type . "', '" . date("Y-m-d h:i:s") . "', '" . $_SERVER['REMOTE_ADDR'] . "')";
-                        //         $result = mysql_query($query) or die(mysql_error());
-                        //         echo "<meta http-equiv='refresh' content='0;url=index.php?action=login&#login_form'>";
-                        //     } else {
-                        //         echo "<meta http-equiv='refresh' content='0;url=index.php?registered=user&register=true&#register'>";
-                        //         echo '<script>alert("Account Already Registered")</script>';
-                        //     }
-                        // }
-
-
-                        // End of Register
-                        
-                        // Login
-                        
-                        // if ($_REQUEST['logging_in'] == true) {
-                        //     $query = "select * from user where email='" . $_REQUEST['email'] . "' and paswrd='" . $_REQUEST['password'] . "'";
-                        //     $result = mysql_query($query) or die(mysql_error());
-                        //     $total_results = mysql_num_rows($result);
-                        //     if ($total_results == 0) {
-                        //         echo '<meta http-equiv="refresh" content="0;url=index.php?action=register&#login_form">';
-                        //     } else {
-                        //         $row = mysql_fetch_array($result);
-                        //         setcookie("email", $row['email'], time() + 3600);
-                        //         setcookie("type", $row['usertype'], time() + 3600);
-                        //         echo '<meta http-equiv="refresh" content="0,url=index.php?user=logged_in">';
-                        //     }
-                        // }
-
-                        // End of Login
-                        
-                        // Register Form
-                        
-                        // if ($_REQUEST['action'] == 'register') {
-                        //     print('<h1>Registration Form</h1>');
-                        //     print('<form action=index.php method=post>');
-                        //     print('Enter Name<input type=text name=name><br>');
-                        //     print('Enter Email<input type=text name=email><br>');
-                        //     print('Enter Password<input type=text name=password><br>');
-                        //     print('Enter Contact<input type=text name=contact><br>');
-                        //     print('Enter Address<input type=text name=address><br>');
-                        //     print('<input type=submit value=submit>');
-                        //     print('</form>');
-                        // }
-
-                        // End of Register Form
-                        
-                        // Login Form
-                        
-                        // if ($_REQUEST['action'] == 'login') {
-                        //     print('<h1 id="login">Login</h1>');
-                        //     print('<form action=index.php?logging_in=true method=post>');
-                        //     print('Enter Email<input type=text name=email><br>');
-                        //     print("Enter Password<input type=text name=password><br>");
-                        //     print('<input type=submit value=submit name=submit>');
-                        //     print('</form>');
-                        // }
-
-                        // End of Login Form
-                        // ?>
-                         <?php
-                        // if ($_REQUEST['user'] != "logged_in") {
-                        //     echo '<li class="nav-item"><a class="nav-link" href="index.php?action=login&#login_form">Login</a></li>';
-                        //     echo '<li class="nav-item"> <a class="nav-link" href="index.php?action=register&#login_form">Register</a></li>';
-                        // } else if ($_REQUEST['user'] == "logged_in") {
-                        // }
-                        // ?>
-                    </div>
-
-                    <!-- end php section -->
-                    <!-- <li>
-                        <a href="locations.html">Locations</a>
+                        if (isset($_COOKIE['type'])) {
+                            if ($_COOKIE['type'] == 'admin') {
+                                echo '<li><a href="customerorders.php">Cust Orders</a></li>';
+                                echo '<li><a href="calendar.php">Calendar</a></li>';
+                            } elseif ($_COOKIE['type'] == 'customer') {
+                                echo '<li><a href="menu.php">Menu</a></li>';
+                                echo '<li><a href="cart.php">Cart</a></li>';
+                            }
+                        }
+                        ?>
                     </li>
-                    <li>
-                        <a href="blog.html">Blog</a>
-                    </li>
-                    <li>
-                        <a href="about.html">About Us</a>
-                    </li> -->
                 </ul>
             </div>
             <div id="calendar">
                 <?php
+                // Assuming you have a database connection established
+                
+                $hostname = "localhost";
+                $database = "Shopee";
+                $db_login = "root";
+                $db_pass = "";
+
+                $dlink = mysqli_connect($hostname, $db_login, $db_pass, $database) or die("Could not connect");
+
                 // Get the current year and month
                 $year = date('Y');
                 $month = date('m');
@@ -160,24 +59,30 @@
                 // Get the number of days in the current month
                 $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-                // Get the name of the current month, F in format('F') means the full name of the month
-                $date = new DateTime("$year-$month-01");
-                $month_name = $date->format('F');
+                // Get the name of the current month
+                $month_name = date('F', mktime(0, 0, 0, $month, 1, $year));
+
+                // Retrieve the count of purchases for each day in the current month
+                $query = "SELECT DAY(date) AS day, COUNT(*) AS orderCount FROM Purchase WHERE YEAR(date) = $year AND MONTH(date) = $month GROUP BY DAY(date)";
+                $result = mysqli_query($dlink, $query);
+
+                // Create an empty array to store the order counts
+                $orderCounts = array();
+
+                // Store the order counts in the array
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $orderCounts[$row['day']] = $row['orderCount'];
+                }
+
+                echo "<table width='80%' border='1'>";
+                echo "<caption>$month_name $year</caption>";
+                echo "<tr>";
+                echo "<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>";
+                echo "</tr>";
+                echo "<tr>";
 
                 // Get the index of the first day of the month (0 = Sunday, 1 = Monday, etc.)
-//The first argument, 'w', specifies that we want to retrieve the day of the week as a numeric value (0 for Sunday, 1 for Monday, and so on).
-//strtotime function creates a timestamp representing the first day of the given month and year.
                 $first_day_index = (int) date('w', strtotime("$year-$month-01"));
-
-                // Start the table and print the month name
-                echo "<table width=80% border=1><caption>$month_name $year</caption>";
-
-                // Print the table headers (days of the week)
-                echo "<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>";
-                echo "<th>Thu</th><th>Fri</th><th>Sat</th>";
-                echo "</tr>";
-
-                // Start a new row for the first week
 
                 // Print blank cells for the days before the first day of the month
                 for ($i = 0; $i < $first_day_index; $i++) {
@@ -187,23 +92,76 @@
                 // Print the cells for the days of the month
                 for ($day = 1; $day <= $num_days; $day++) {
                     // Start a new row at the beginning of each week
-                    if ($day > 1 && ($day - 1 + $first_day_index) % 7 == 0) {
+                    if (($day + $first_day_index - 1) % 7 === 0) {
                         echo "</tr><tr>";
                     }
 
-                    // Print the cell for the current day
-                    echo "<td align=center>$day</td>";
+                    // Get the order count for the current day
+                    $orderCount = isset($orderCounts[$day]) ? $orderCounts[$day] : 0;
+
+                    // Highlight the current day
+                    $class = ($day == date('d')) ? 'current-day' : '';
+
+                    echo "<td align='center' class='$class'>$day ($orderCount)</td>";
                 }
 
                 // Print blank cells for the days after the last day of the month
-                for ($i = $num_days + $first_day_index; $i < 42; $i++) {
+                $last_day_index = ($first_day_index + $num_days - 1) % 7;
+                for ($i = $last_day_index; $i < 6; $i++) {
+                    echo "<td></td>";
                 }
 
-                // End the last row and the table
-                echo "</tr></table>";
+                echo "</tr>";
+                echo "</table>";
+
+                // Close the database connection
+                mysqli_close($dlink);
                 ?>
             </div>
             </ul>
+            <div id="footer">
+                <div>
+                    <a href="index.html"><img src="images/logo2.png" alt="Image"></a>
+                    <p class="footnote">
+                        &copy; Yay&#33;Koffee 2011.<br>All Rights Reserved.
+                    </p>
+                </div>
+                <div class="section">
+                    <ul>
+                        <!-- <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="current">
+                            <a href="menu.html">Menu</a>
+                        </li>
+                        <li>
+                            <a href="locations.html">Locations</a>
+                        </li>
+                        <li>
+                            <a href="blog.html">Blog</a>
+                        </li>
+                        <li>
+                            <a href="about.html">About Us</a>
+                        </li> -->
+                    </ul>
+                    <div id="connect">
+                        <a href="http://freewebsitetemplates.com/go/facebook/" target="_blank"
+                            id="facebook">Facebook</a>
+                        <a href="http://freewebsitetemplates.com/go/twitter/" target="_blank" id="twitter">Twitter</a>
+                        <a href="http://freewebsitetemplates.com/go/googleplus/" target="_blank"
+                            id="googleplus">Google+</a>
+                        <a href="index.html" id="rss">RSS</a>
+                    </div>
+                    <p>
+                        This website template has been designed by <a href="http://www.freewebsitetemplates.com/">Free
+                            Website Templates</a> for you, for free. You can replace all this text with your own text.
+                        You can remove any link to our website from this website template, you&#39;re free to use this
+                        website template without linking back to us. If you&#39;re having problems editing this website
+                        template, then don&#39;t hesitate to ask for help on the <a
+                            href="http://www.freewebsitetemplates.com/forums/">Forums</a>.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
     </div>
