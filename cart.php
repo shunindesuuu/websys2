@@ -1,67 +1,11 @@
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
-<style>
-    #cart-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    #cart-table th {
-        text-align: left;
-        padding: 8px;
-        background-color: #f2f2f2;
-    }
-
-    #cart-table td {
-        padding: 8px;
-        border-bottom: 1px solid orange;
-        box-sizing: border-box;
-    }
-
-    #cart-table img {
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    #cart-table select {
-        width: 60px;
-    }
-
-    #cart-table button {
-        padding: 5px 10px;
-        background-color: #f44336;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-    }
-
-    #cart-table button:hover {
-        background-color: #d32f2f;
-    }
-
-    #total_price {
-        font-weight: bold;
-    }
-
-    #place_order {
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #4caf50;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-    }
-
-    #place_order:hover {
-        background-color: #45a049;
-    }
-</style>
 
 <head>
     <meta charset="UTF-8">
     <title>Menu - Yay&#33;Koffee Website Template</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/cart.css">
 </head>
 
 <body>
@@ -92,6 +36,8 @@
                         } elseif ($_COOKIE['type'] == 'customer') {
                             echo '<li><a href="menu.php">Menu</a></li>';
                             echo '<li><a href="cart.php">Cart</a></li>';
+                            echo '<li><a href="myorders.php">My Orders</a></li>';
+
                         }
                     }
                     ?>
@@ -173,10 +119,19 @@
 
                     // Place order functionality
                     if (isset($_POST['place_order'])) {
-                        $cart = unserialize($_COOKIE['cart']);
+                        $cart = isset($_COOKIE['cart']) ? unserialize($_COOKIE['cart']) : array(); // Check if the cart cookie is set
+                        $customerEmail = $_COOKIE['email']; // Assuming you have stored the customer's email in a cookie
+                    
                         foreach ($cart as $prodid => $product) {
                             if (isset($_POST['purchase']) && in_array($prodid, $_POST['purchase'])) {
                                 $quantity = $_POST['quantity'][$prodid];
+
+                                if (empty($quantity)) {
+                                    echo '<script>alert("This item is out of stock.");</script>';
+                                    echo '<script>window.location.href = "' . $_SERVER['PHP_SELF'] . '";</script>';
+                                    exit;
+                                }
+
                                 // Update the quantity in the database
                                 $hostname = "localhost";
                                 $database = "Shopee";
@@ -185,16 +140,34 @@
                                 $dlink = mysqli_connect($hostname, $db_login, $db_pass, $database) or die("Could not connect");
                                 $query = "UPDATE Products SET quantity = quantity - $quantity WHERE prodid='$prodid'";
                                 mysqli_query($dlink, $query);
+
                                 // Remove purchased product from the cart
                                 unset($cart[$prodid]);
+
+                                // Insert the purchase record into the Purchase table
+                                $date = date('Y-m-d H:i:s');
+                                $status = 'Pending'; // Set the initial status as Pending
+                    
+                                // Retrieve the user ID from the Users table
+                                $userQuery = "SELECT userid FROM user WHERE email='$customerEmail'";
+                                $userResult = mysqli_query($dlink, $userQuery);
+                                $user = mysqli_fetch_assoc($userResult);
+                                $userId = $user['userid'];
+
+                                $insertQuery = "INSERT INTO Purchase (userid, prodid, quantity, date, status) VALUES ('$userId', '$prodid', '$quantity', '$date', '$status')";
+                                mysqli_query($dlink, $insertQuery);
+
                             }
                         }
+
                         // Save updated cart after placing the order
                         setcookie('cart', serialize($cart), time() + (86400 * 30), "/"); // 30 days
-                        header("Location: {$_SERVER['PHP_SELF']}");
+                    
+                        // Display alert message using JavaScript
+                        echo '<script>alert("Thank you for purchasing ' . $customerEmail . '!");</script>';
+                        echo '<script>window.location.href = "' . $_SERVER['PHP_SELF'] . '";</script>';
                         exit;
                     }
-
                     function updatePrice($prodid, $price)
                     {
                         $quantity = $_POST['quantity'][$prodid];
