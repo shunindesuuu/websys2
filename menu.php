@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Menu - Yay&#33;Koffee Website Template</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
 </head>
 
 <body>
@@ -36,6 +36,8 @@
 						} elseif ($_COOKIE['type'] == 'customer') {
 							echo '<li><a href="menu.php">Menu</a></li>';
 							echo '<li><a href="cart.php">Cart</a></li>';
+							echo '<li><a href="myorders.php">My Orders</a></li>';
+
 						}
 					}
 					?>
@@ -53,7 +55,7 @@
 			<div id="body">
 				<div id="figure">
 					<img src="images/headline-menu.jpg" alt="Image">
-					<span>Lorem ipsum dolor sit amet.</span>
+					<span>Menu</span>
 				</div>
 				<div>
 					<a href="menu.php" class="whatshot"></a>
@@ -66,7 +68,7 @@
 							$db_pass = "";
 							$dlink = mysqli_connect($hostname, $db_login, $db_pass, $database) or die("Could not connect");
 
-							// check if a category filter is set
+							// Check if a category filter is set
 							if (isset($_GET['category'])) {
 								$category_filter = $_GET['category'];
 								$query = "SELECT * FROM Products WHERE prodcat='$category_filter' ORDER BY prodid";
@@ -77,6 +79,8 @@
 							$result = mysqli_query($dlink, $query);
 							$current_cat = '';
 
+							echo '<ul>';
+
 							while ($row = mysqli_fetch_assoc($result)) {
 								if ($current_cat != $row['prodcat']) {
 									echo '<h1><a href="?category=' . $row['prodcat'] . '">' . $row['prodcat'] . '</a></h1>';
@@ -85,12 +89,23 @@
 
 								echo '<li>';
 								echo '<a href="#"><img src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
-								echo '<div>';
-								echo '<a href="cart.php?prodid=' . $row['prodid'] . '">' . $row['productname'] . '</a>';
-								echo '<p>$' . $row['curprice'] . '</p>';
+								echo '<div id>';
+
+								// Display product name, price, and quantity
+								if ($row['quantity'] > 0) {
+									echo '<p style="display: inline;">Quantity: ' . $row['quantity'] . '</p>';
+									echo '<a href="cart.php?prodid=' . $row['prodid'] . '">' . $row['productname'] . '</a>';
+								echo '<p>$' . $row['curprice'] . '</p>'; // Display product quantity
+								} else {
+									echo '<p style="display: inline; color: red;">Out of Stock</p>';
+									
+								}
+														
 								echo '</div>';
 								echo '</li>';
 							}
+
+							echo '</ul>';
 
 							mysqli_close($dlink);
 							?>
@@ -103,7 +118,6 @@
 										$5.00
 									</p>
 								</div>
-
 							</li>
 							<li>
 								<a href="#"><img src="images/coffee2.jpg" alt="Image"></a>

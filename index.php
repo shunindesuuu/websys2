@@ -32,10 +32,13 @@
 						<?php
 						if (isset($_COOKIE['type'])) {
 							if ($_COOKIE['type'] == 'admin') {
+								echo '<li><a href="adminproducts.php">Products</a></li>';
+								echo '<li><a href="customerorders.php">Cust Orders</a></li>';
 								echo '<li><a href="calendar.php">Calendar</a></li>';
 							} elseif ($_COOKIE['type'] == 'customer') {
 								echo '<li><a href="menu.php">Menu</a></li>';
 								echo '<li><a href="cart.php">Cart</a></li>';
+								echo '<li><a href="myorders.php">My Orders</a></li>';
 							}
 						}
 						?>
