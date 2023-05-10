@@ -103,7 +103,7 @@
                     // Retrieve user's orders from the Purchase table based on the status
                     $query = "SELECT * FROM Purchase WHERE userid='$userId'";
                     if (!empty($status)) {
-                        $query .= " AND status='$status'";
+                        $query .= " AND status='$status'"; 
                     }
 
                     $result = mysqli_query($dlink, $query);

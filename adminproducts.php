@@ -62,6 +62,36 @@
                     <a href="adminproducts.php" class="whatshot"></a>
                     <div>
                         <ul>
+                            <script>
+                                function openPopup(prodid) {
+                                    var popup = window.open('', 'Edit Product', 'width=400,height=300');
+
+                                    // Generate the HTML content for the pop-up window
+                                    var content = `
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="image" accept="image/*" maxlength="2097152" /><br>
+                <input type="text" name="productname" placeholder="Product Name"><br>
+                <textarea name="description" placeholder="Product Description"></textarea><br>
+                <input type="number" name="quantity" placeholder="Quantity"><br>
+                <input type="text" name="curprice" placeholder="Price"><br>
+                <input type="hidden" name="prodid" value="${prodid}">
+                <input type="submit" name="submit" value="Save">
+            </form>
+        `;
+
+                                    popup.document.write(content);
+                                    popup.document.close();
+                                }
+                                function selectAction(prodid, action) {
+                                    if (action === 'delete') {
+                                        if (confirm('Are you sure you want to delete this product?')) {
+                                            window.location.href = 'delete.php?prodid=' + prodid;
+                                        }
+                                    } else if (action === 'edit') {
+                                        openPopup(prodid);
+                                    }
+                                }
+                            </script>
                             <?php
                             $hostname = "localhost";
                             $database = "Shopee";
@@ -92,27 +122,13 @@
                                 echo '<a href="#"><img src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
                                 echo '<div>';
 
-                                // Display product name, price, and quantity
-                                echo '<select>';
+                                echo '<select onchange="selectAction(' . $row['prodid'] . ', this.value);">';
                                 echo '<option value="">Select Action</option>';
                                 echo '<option value="delete">Delete</option>';
                                 echo '<option value="edit">Edit</option>';
                                 echo '</select>';
                                 echo '<p style="display: inline;">Quantity: ' . $row['quantity'] . '</p>';
                                 echo '<p>' . $row['productname'] . '</p>';
-
-                                // Edit form for admin
-                                echo '<div class="edit-form" style="display: none;">';
-                                echo '<form method="POST" enctype="multipart/form-data">';
-                                echo '<input type="file" name="image" accept="image/*" maxlength="2097152" /><br>';
-                                echo '<input type="text" name="productname" placeholder="Product Name"><br>';
-                                echo '<textarea name="description" placeholder="Product Description"></textarea><br>';
-                                echo '<input type="number" name="quantity" placeholder="Quantity"><br>';
-                                echo '<input type="text" name="curprice" placeholder="Price"><br>';
-                                echo '<input type="hidden" name="prodid" value="' . $row['prodid'] . '">';
-                                echo '<input type="submit" name="submit" value="Save">';
-                                echo '</form>';
-                                echo '</div>';
 
                                 echo '</div>';
                                 echo '</li>';
@@ -128,17 +144,64 @@
                                 $quantity = $_POST['quantity'];
                                 $curprice = $_POST['curprice'];
 
-                                // Update the product information in the database
-                                $updateQuery = "UPDATE Products SET productname='$productname', description='$description', quantity='$quantity', curprice='$curprice' WHERE prodid='$prodid'";
-                                mysqli_query($dlink, $updateQuery);
+                                // Construct the update query based on the submitted form values
+                                $updateQuery = "UPDATE Products SET ";
+
+                                $updateFields = array();
+
+                                if (!empty($productname)) {
+                                    $updateFields[] = "productname='$productname'";
+                                }
+                                if (!empty($description)) {
+                                    $updateFields[] = "productdesc='$description'";
+                                }
+                                if (!empty($quantity)) {
+                                    $updateFields[] = "quantity='$quantity'";
+                                }
+                                if (!empty($curprice)) {
+                                    $updateFields[] = "curprice='$curprice'";
+                                }
+
+                                $updateQuery .= implode(", ", $updateFields);
+                                $updateQuery .= " WHERE prodid='$prodid'";
+
+                                // Execute the update query
+                                $result = mysqli_query($dlink, $updateQuery);
+
+                                // Check if the update was successful
+                                if ($result) {
+                                    echo '<script>alert("Product updated successfully.");</script>';
+                                } else {
+                                    echo '<script>alert("Failed to update product. Please try again.");</script>';
+                                }
 
                                 // Handle the image upload if a file is selected
                                 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                     $image = $_FILES['image']['tmp_name'];
-                                    $imageData = mysqli_real_escape_string($dlink, file_get_contents($image));
-                                    $updateImageQuery = "UPDATE Products SET productimage='$imageData' WHERE prodid='$prodid'";
-                                    mysqli_query($dlink, $updateImageQuery);
+
+                                    // Read the image file
+                                    $imageData = file_get_contents($image);
+
+                                    if ($imageData !== false) {
+                                        $updateImageQuery = "UPDATE Products SET productimage=? WHERE prodid=?";
+                                        $stmt = mysqli_prepare($dlink, $updateImageQuery);
+                                        mysqli_stmt_bind_param($stmt, "bi", $imageData, $prodid);
+                                        mysqli_stmt_send_long_data($stmt, 0, $imageData);
+                                        $resultImage = mysqli_stmt_execute($stmt);
+                                        mysqli_stmt_close($stmt);
+
+                                        // Check if the image update was successful
+                                        if ($resultImage) {
+                                            echo '<script>alert("Product image updated successfully.");</script>';
+                                        } else {
+                                            echo '<script>alert("Failed to update product image. Please try again.");</script>';
+                                        }
+                                    } else {
+                                        echo '<script>alert("Failed to read the image file. Please try again.");</script>';
+                                    }
                                 }
+                                // Close the pop-up window after saving
+                                echo '<script>window.opener.location.reload(); window.close();</script>';
                             }
 
                             mysqli_close($dlink);

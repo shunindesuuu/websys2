@@ -216,6 +216,7 @@
 
                                     $subtotal = $product['price'] * $quantity;
                                     $total_price += $subtotal;
+
                                     echo '<tr id="cart-row-' . $prodid . '">';
                                     echo '<td><input type="checkbox" name="purchase[]" value="' . $prodid . '" id="checkbox-' . $prodid . '"></td>';
                                     echo '<td><img src="' . $product['image'] . '" alt="' . $product['name'] . '" id="image-' . $prodid . '"></td>';
