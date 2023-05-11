@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
+<style>
+    #popup-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        display: none;
+    }
+</style>
 
 <head>
     <meta charset="UTF-8">
@@ -63,33 +77,29 @@
                     <div>
                         <ul>
                             <script>
-                                function openPopup(prodid) {
-                                    var popup = window.open('', 'Edit Product', 'width=400,height=300');
-
-                                    // Generate the HTML content for the pop-up window
-                                    var content = `
-            <form method="POST" enctype="multipart/form-data">
-                <input type="file" name="image" accept="image/*" maxlength="2097152" /><br>
-                <input type="text" name="productname" placeholder="Product Name"><br>
-                <textarea name="description" placeholder="Product Description"></textarea><br>
-                <input type="number" name="quantity" placeholder="Quantity"><br>
-                <input type="text" name="curprice" placeholder="Price"><br>
-                <input type="hidden" name="prodid" value="${prodid}">
-                <input type="submit" name="submit" value="Save">
-            </form>
-        `;
-
-                                    popup.document.write(content);
-                                    popup.document.close();
-                                }
                                 function selectAction(prodid, action) {
                                     if (action === 'delete') {
-                                        if (confirm('Are you sure you want to delete this product?')) {
-                                            window.location.href = 'delete.php?prodid=' + prodid;
-                                        }
+                                        // Delete action logic
                                     } else if (action === 'edit') {
-                                        openPopup(prodid);
+                                        openFormPopup(prodid); // Call the openFormPopup function
+                                    } else if (action === 'insert') {
+                                        // Insert action logic
                                     }
+                                }
+
+                                function openFormPopup(prodid) {
+                                    // Show the form popup
+                                    var popupContainer = document.getElementById("popup-container");
+                                    popupContainer.style.display = "block";
+
+                                    // Set the product ID value in the form
+                                    var prodIdInput = document.getElementById("prodid");
+                                    prodIdInput.value = prodid;
+                                }
+                                function closeFormPopup() {
+                                    // Hide the form popup
+                                    var popupContainer = document.getElementById("popup-container");
+                                    popupContainer.style.display = "none";
                                 }
                             </script>
                             <?php
@@ -126,10 +136,10 @@
                                 echo '<option value="">Select Action</option>';
                                 echo '<option value="delete">Delete</option>';
                                 echo '<option value="edit">Edit</option>';
+                                echo '<option value="insert">Insert</option>';
                                 echo '</select>';
                                 echo '<p style="display: inline;">Quantity: ' . $row['quantity'] . '</p>';
                                 echo '<p>' . $row['productname'] . '</p>';
-
                                 echo '</div>';
                                 echo '</li>';
                             }
@@ -183,11 +193,14 @@
                                     $imageData = file_get_contents($image);
 
                                     if ($imageData !== false) {
-                                        $updateImageQuery = "UPDATE Products SET productimage=? WHERE prodid=?";
+                                        // Prepare the query to update the image and its directory
+                                        $updateImageQuery = "UPDATE Products SET productimage=?, image_directory=? WHERE prodid=?";
                                         $stmt = mysqli_prepare($dlink, $updateImageQuery);
-                                        mysqli_stmt_bind_param($stmt, "bi", $imageData, $prodid);
-                                        mysqli_stmt_send_long_data($stmt, 0, $imageData);
-                                        $resultImage = mysqli_stmt_execute($stmt);
+                                        // Set the parameters for the query
+                                        $imageDirectory = "path/to/save/image.jpg"; // Replace with your desired image directory
+                                        mysqli_stmt_bind_param($stmt, "ssi", $imageData, $imageDirectory, $prodid);
+                                        mysqli_stmt_execute($stmt);
+                                        $resultImage = mysqli_stmt_affected_rows($stmt);
                                         mysqli_stmt_close($stmt);
 
                                         // Check if the image update was successful
@@ -254,6 +267,57 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="popup-container" style="display: none;">
+        <div id="popup-window">
+            <div class="modal-content">
+                <button type="button" class="close" onclick="closeFormPopup()">&times;</button>
+                <div>
+                    <div class="row text-center">
+                        <h1>Edit Product</h1>
+                        <hr>
+                        <p>Update the product details below:</p>
+                    </div>
+                    <br>
+                    <form action="" method="post" id="edit-form" enctype="multipart/form-data">
+                        <input type="hidden" id="prodid" name="prodid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control" name="productname" id="productname"
+                                    placeholder="Product Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" name="description" id="description"
+                                    placeholder="Description" required>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control" name="quantity" id="quantity" placeholder="Quantity"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" name="curprice" id="curprice" placeholder="Current Price"
+                                    required>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="file" name="image" id="image" accept="image/*">
+                            </div>
+                        </div>
+                        <br>
+                        <center>
+                            <input type="submit" class="btn btn-primary" name="submit" value="Save">
+                        </center>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 

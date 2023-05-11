@@ -222,6 +222,16 @@
             </div>
         </div>
     </div>
+    <script>
+        // Refresh the page after displaying the alert
+        window.onload = function () {
+            var alertMessage = "<?php echo $alertMessage; ?>";
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                location.reload();
+            }
+        };
+    </script>
 </body>
 
 </html>
