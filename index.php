@@ -32,10 +32,13 @@
 						<?php
 						if (isset($_COOKIE['type'])) {
 							if ($_COOKIE['type'] == 'admin') {
+								echo '<li><a href="adminproducts.php">Products</a></li>';
+								echo '<li><a href="customerorders.php">Cust Orders</a></li>';
 								echo '<li><a href="calendar.php">Calendar</a></li>';
 							} elseif ($_COOKIE['type'] == 'customer') {
 								echo '<li><a href="menu.php">Menu</a></li>';
 								echo '<li><a href="cart.php">Cart</a></li>';
+								echo '<li><a href="myorders.php">My Orders</a></li>';
 							}
 						}
 						?>
@@ -85,10 +88,10 @@
 
 						// End of Register
 						
-						// Login
 						
+						// Login
 						if ($_REQUEST['logging_in'] == true) {
-							$query = "select * from user where email='" . $_REQUEST['email'] . "' and paswrd='" . $_REQUEST['password'] . "'";
+							$query = "SELECT * FROM user WHERE email='" . $_REQUEST['email'] . "' AND paswrd='" . $_REQUEST['password'] . "'";
 							$result = mysql_query($query) or die(mysql_error());
 							$total_results = mysql_num_rows($result);
 							if ($total_results == 0) {
@@ -100,6 +103,7 @@
 								echo '<meta http-equiv="refresh" content="0,url=index.php?user=logged_in">';
 							}
 						}
+
 
 						// End of Login
 						
