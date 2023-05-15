@@ -48,7 +48,7 @@
 
                 // Check if the user is logged in and has the usertype of "admin"
                 if (!isset($_COOKIE['type']) || $_COOKIE['type'] !== 'admin') {
-                    header("Location: index.php");
+                    header("Location: index.php?action=login&#login_form");
                     exit();
                 }
                 

@@ -108,6 +108,12 @@
 					<div>
 						<ul>
 							<?php
+							// Check if the user is logged in and has the usertype of "admin"
+							if (!isset($_COOKIE['type']) || $_COOKIE['type'] !== 'customer') {
+								header("Location: index.php?action=login&#login_form");
+								exit();
+							}
+
 							$hostname = "localhost";
 							$database = "Shopee";
 							$db_login = "root";
@@ -136,7 +142,7 @@
 								}
 
 								echo '<li>';
-								echo '<a href="#"><img id="product-image" src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
+								echo '<a><img id="product-image" src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
 								echo '<div id="product-details">';
 
 								// Display product name, price, and quantity
@@ -156,95 +162,6 @@
 
 							mysqli_close($dlink);
 							?>
-
-
-							<!-- <li>
-								<a href="#"><img src="images/coffee1.jpg" alt="Image"></a>
-								<div>
-									<a href="#">Iced Americano</a>
-									<p id="">
-										$5.00
-									</p>
-								</div>
-							</li>
-							<li>
-								<a href="#"><img src="images/coffee2.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Hot Mocha</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<li>
-								<a href="#"><img src="images/coffee5.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Hot Latte</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<a href="hotbrew.php">
-								<h1>Hot Brew</h1>
-							</a>
-							<li>
-								<a href="#"><img src="images/coffee4.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Hot Americano</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<li>
-								<a href="#"><img src="images/coffee5.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Hot Latte</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<li>
-								<a href="#"><img src="images/coffee6.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Hot Mocha</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<a href="coldbrew.php">
-								<h1>Cold Brew</h1>
-							</a>
-							<li>
-								<a href="#"><img src="images/coffee1.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Iced Americano</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<li>
-								<a href="#"><img src="images/coffee2.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Iced Latte</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li>
-							<li>
-								<a href="#"><img src="images/coffee3.jpg" alt="Image"></a>
-								<div>
-									<a href="index.html">Iced Mocha</a>
-									<p>
-										Lorem ipsum &#36;0.00
-									</p>
-								</div>
-							</li> -->
 						</ul>
 					</div>
 				</div>

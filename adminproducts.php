@@ -60,6 +60,7 @@
         display: inline-block;
         font-size: 16px;
         margin-bottom: 10px;
+        margin-top: 10px;
         cursor: pointer;
     }
 
@@ -177,10 +178,9 @@
                     <div>
                         <ul>
                             <?php
-
                             // Check if the user is logged in and has the usertype of "admin"
                             if (!isset($_COOKIE['type']) || $_COOKIE['type'] !== 'admin') {
-                                header("Location: index.php");
+                                header("Location: index.php?action=login&#login_form");
                                 exit();
                             }
                             $hostname = "localhost";
@@ -215,7 +215,7 @@
 
                                 echo '<li>';
 
-                                echo '<a href="#"><img id="product-image" src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
+                                echo '<a><img id="product-image" src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
                                 echo '<select class="product-options" onchange="handleProductOptionChange(' . $row['prodid'] . ', this)">
                                 <option value="" selected>--------</option> <!-- Make the empty value option selected -->
                                 <option value="edit">Edit</option>
@@ -287,7 +287,9 @@
                                 }
 
                                 function handleDeleteProduct(prodid) {
-                                    if (confirm("Are you sure you want to delete this product?")) {
+                                    var confirmationMessage = "Are you sure you want to delete this product (prodid = " + prodid + ")?";
+
+                                    if (confirm(confirmationMessage)) {
                                         // Make an AJAX request to delete the product
                                         var xhr = new XMLHttpRequest();
                                         xhr.open("POST", "delete_product.php", true);
@@ -310,6 +312,27 @@
 
                                     // Set the prodid value in the edit form
                                     document.getElementById('prodid').value = prodid;
+
+                                    // Update the heading with the prodid
+                                    var heading = document.getElementById('popup-heading');
+                                    heading.textContent = 'Edit Product ' + prodid;
+
+                                    // Retrieve the product details using AJAX
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.open("GET", "get_product_details.php?prodid=" + prodid, true);
+                                    xhr.onreadystatechange = function () {
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                            var productDetails = JSON.parse(xhr.responseText);
+
+                                            // Set the values of the form fields
+                                            document.getElementById('productname').value = productDetails.productname;
+                                            document.getElementById('description').value = productDetails.description;
+                                            document.getElementById('quantity').value = productDetails.quantity;
+                                            document.getElementById('curprice').value = productDetails.curprice;
+                                            document.getElementById('prodcat').value = productDetails.prodcat; // Set product category value
+                                        }
+                                    };
+                                    xhr.send();
                                 }
                                 function editCategoryName(categoryId) {
                                     var categoryElement = document.getElementById('category-' + categoryId);
@@ -364,7 +387,9 @@
                                 }
 
                                 function confirmDeleteCategory(categoryId) {
-                                    var confirmation = confirm("Are you sure you want to delete this category and its products?");
+                                    var confirmationMessage = "Are you sure you want to delete this category (" + categoryId + ") and its products?";
+
+                                    var confirmation = confirm(confirmationMessage);
                                     if (confirmation) {
                                         // Send an AJAX request to delete the category
                                         var xhr = new XMLHttpRequest();
@@ -387,51 +412,9 @@
                     </div>
                 </div>
             </div>
-            <div id="footer">
-                <div>
-                    <a href="index.html"><img src="images/logo2.png" alt="Image"></a>
-                    <p class="footnote">
-                        &copy; Yay&#33;Koffee 2011.<br>All Rights Reserved.
-                    </p>
-                </div>
-                <div class="section">
-                    <ul>
-                        <li>
-                            <a href="index.html">Home</a>
-                        </li>
-                        <li class="current">
-                            <a href="adminproducts.html">adminproducts</a>
-                        </li>
-                        <li>
-                            <a href="locations.html">Locations</a>
-                        </li>
-                        <li>
-                            <a href="blog.html">Blog</a>
-                        </li>
-                        <li>
-                            <a href="about.html">About Us</a>
-                        </li>
-                    </ul>
-                    <div id="connect">
-                        <a href="http://freewebsitetemplates.com/go/facebook/" target="_blank"
-                            id="facebook">Facebook</a>
-                        <a href="http://freewebsitetemplates.com/go/twitter/" target="_blank" id="twitter">Twitter</a>
-                        <a href="http://freewebsitetemplates.com/go/googleplus/" target="_blank"
-                            id="googleplus">Google+</a>
-                        <a href="index.html" id="rss">RSS</a>
-                    </div>
-                    <p>
-                        This website template has been designed by <a href="http://www.freewebsitetemplates.com/">Free
-                            Website Templates</a> for you, for free. You can replace all this text with your own text.
-                        You can remove any link to our website from this website template, you&#39;re free to use this
-                        website template without linking back to us. If you&#39;re having problems editing this website
-                        template, then don&#39;t hesitate to ask for help on the <a
-                            href="http://www.freewebsitetemplates.com/forums/">Forums</a>.
-                    </p>
-                </div>
-            </div>
+
         </div>
-    </div>
+    </div> -->
     <!-- Add the popup container -->
     <div id="popup-container" style="display: none;">
         <div id="popup-window">
@@ -439,7 +422,7 @@
                 <button type="button" class="close" onclick="closeFormPopup()">&times;</button>
                 <div>
                     <div class="row text-center">
-                        <h1>Edit Product</h1>
+                        <h1 id="popup-heading">Edit Product</h1>
                         <hr>
                         <p>Update the product details below:</p>
                     </div>
@@ -448,10 +431,15 @@
                         onsubmit="handleProductUpdate(event)">
                         <input type="hidden" id="prodid" name="prodid">
                         <div class="row">
+                        <div class="col-md-6">
+                                <label for="prodcat">Product Category:</label>
+                                <input class="form-control" name="prodcat" id="prodcat"
+                                    placeholder="Product Category" >
+                            </div>
                             <div class="col-md-6">
                                 <label for="productname">Product Name:</label>
                                 <input class="form-control" name="productname" id="productname"
-                                    placeholder="Product Name">
+                                    placeholder="Product Name" >
                             </div>
                             <div class="col-md-6">
                                 <label for="description">Description:</label>

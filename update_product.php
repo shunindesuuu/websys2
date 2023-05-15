@@ -16,6 +16,7 @@ if (isset($_POST['submit'])) {
     $description = $_POST['description'];
     $quantity = $_POST['quantity'];
     $curprice = $_POST['curprice'];
+    $prodcat = $_POST['productcategory'];
 
     // Construct the update query based on the submitted form values
     $updateQuery = "UPDATE Products SET ";
@@ -33,6 +34,9 @@ if (isset($_POST['submit'])) {
     }
     if (!empty($curprice)) {
         $updateFields[] = "curprice='$curprice'";
+    }
+    if (!empty($prodcat)) {
+        $updateFields[] = "prodcat='$prodcat'";
     }
 
     // Check if an image was uploaded
@@ -73,6 +77,26 @@ if (isset($_POST['submit'])) {
         }
     } else {
         echo '<script>alert("No fields were updated.");</script>';
+    }
+    // Retrieve the updated quantity value from the form submission
+    $quantity = $_POST['quantity'];
+
+    // Check if the quantity value is set to 0
+    if ($quantity == 0) {
+        // Perform the database update query
+        $updateQuery = "UPDATE Products SET quantity = '$quantity' WHERE prodid = '$prodid'";
+
+        // Execute the update query
+        $result = mysqli_query($dlink, $updateQuery);
+
+        // Check if the update was successful
+        if ($result) {
+            echo '<script>alert("Product quantity updated successfully.");</script>';
+        } else {
+            echo '<script>alert("Failed to update product quantity. Please try again.");</script>';
+        }
+    } else {
+        echo '<script>alert("The quantity value is not 0. No update is performed.");</script>';
     }
 }
 
