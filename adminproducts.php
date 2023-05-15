@@ -218,7 +218,7 @@
                                 echo '<a href="#"><img id="product-image" src="' . $row['productimage'] . '" alt="' . $row['productname'] . '"></a>';
                                 echo '<select class="product-options" onchange="handleProductOptionChange(' . $row['prodid'] . ', this)">
                                 <option value="" selected>--------</option> <!-- Make the empty value option selected -->
-                                <option value="edit">Edit</option>
+                                <option value="edit" >Edit</option>
                                 <option value="insert">Insert</option>
                                 <option value="delete">Delete</option>
                                 </select>';
@@ -248,6 +248,7 @@
                             ?>
 
                             <script>
+
                                 function openFormPopup() {
                                     document.getElementById('popup-container').style.display = 'flex';
                                 }
@@ -287,7 +288,9 @@
                                 }
 
                                 function handleDeleteProduct(prodid) {
-                                    if (confirm("Are you sure you want to delete this product?")) {
+                                    var confirmationMessage = "Are you sure you want to delete this product (prodid = " + prodid + ")?";
+
+                                    if (confirm(confirmationMessage)) {
                                         // Make an AJAX request to delete the product
                                         var xhr = new XMLHttpRequest();
                                         xhr.open("POST", "delete_product.php", true);
@@ -304,12 +307,15 @@
                                         selectElement.value = "";
                                     }
                                 }
+
                                 function handleProductEdit(prodid) {
                                     // Show the edit form popup
                                     document.getElementById('popup-container').style.display = 'block';
 
                                     // Set the prodid value in the edit form
                                     document.getElementById('prodid').value = prodid;
+                                    document.getElementById('popup-prodid').textContent = prodid;
+
                                 }
                                 function editCategoryName(categoryId) {
                                     var categoryElement = document.getElementById('category-' + categoryId);
@@ -364,7 +370,9 @@
                                 }
 
                                 function confirmDeleteCategory(categoryId) {
-                                    var confirmation = confirm("Are you sure you want to delete this category and its products?");
+                                    var confirmationMessage = "Are you sure you want to delete this category (" + categoryId + ") and its products?";
+
+                                    var confirmation = confirm(confirmationMessage);
                                     if (confirmation) {
                                         // Send an AJAX request to delete the category
                                         var xhr = new XMLHttpRequest();
@@ -382,6 +390,7 @@
                                         xhr.send('categoryId=' + encodeURIComponent(categoryId) + '&newCategoryName=');
                                     }
                                 }
+
                             </script>
                         </ul>
                     </div>
@@ -439,24 +448,48 @@
                 <button type="button" class="close" onclick="closeFormPopup()">&times;</button>
                 <div>
                     <div class="row text-center">
-                        <h1>Edit Product</h1>
+                        <h1>Edit Product <span id="popup-prodid"></span></h1>
                         <hr>
                         <p>Update the product details below:</p>
                     </div>
                     <br>
+                    <?php
+                    $hostname = "localhost";
+                    $database = "Shopee";
+                    $db_login = "root";
+                    $db_pass = "";
+                    $dlink = mysqli_connect($hostname, $db_login, $db_pass, $database) or die("Could not connect");
+
+                    // Retrieve the product ID from the URL parameter
+                    $prodid = isset($_GET['prodid']) ? $_GET['prodid'] : 0;
+
+                    // Retrieve the product details from the database based on the $prodid
+                    $query = "SELECT productname, description, quantity, curprice FROM products WHERE prodid = $prodid";
+                    $result = mysqli_query($dlink, $query);
+
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        $row = mysqli_fetch_assoc($result);
+                        $productname = $row['productname'];
+                        $description = $row['productdesc'];
+                        $quantity = $row['quantity'];
+                        $curprice = $row['curprice'];
+                    }
+
+                    mysqli_close($dlink);
+                    ?>
                     <form action="update_product.php" method="post" id="edit-form" enctype="multipart/form-data"
                         onsubmit="handleProductUpdate(event)">
-                        <input type="hidden" id="prodid" name="prodid">
+                        <input type="hidden" id="prodid" name="prodid" value="<?php echo $prodid; ?>">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="productname">Product Name:</label>
                                 <input class="form-control" name="productname" id="productname"
-                                    placeholder="Product Name">
+                                    placeholder="Product Name" value="<?php echo $productname; ?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="description">Description:</label>
                                 <input class="form-control" name="description" id="description"
-                                    placeholder="Description">
+                                    placeholder="Description" value="<?php echo $description; ?>">
                             </div>
                         </div>
                         <br>
@@ -464,11 +497,12 @@
                             <div class="col-md-6">
                                 <label for="quantity">Quantity:</label>
                                 <input class="form-control" name="quantity" id="quantity" placeholder="Quantity"
-                                    type="number" min="0">
+                                    type="number" min="0" value="<?php echo $quantity; ?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="curprice">Current Price:</label>
-                                <input class="form-control" name="curprice" id="curprice" placeholder="Current Price">
+                                <input class="form-control" name="curprice" id="curprice" placeholder="Current Price"
+                                    value="<?php echo $curprice; ?>">
                             </div>
                         </div>
                         <br>

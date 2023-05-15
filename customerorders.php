@@ -99,10 +99,22 @@
                         $returnRefundCountRow = mysqli_fetch_assoc($returnRefundCountResult);
                         $returnRefundCount = $returnRefundCountRow['returnRefundCount'];
 
-                        // Retrieve orders from the Purchase table based on the status
+                          // Retrieve orders from the Purchase table based on the status and date
                         $query = "SELECT * FROM Purchase";
+
+                        // Add the date filter if a date parameter is provided
+                        if (isset($_GET['date'])) {
+                            $selectedDate = $_GET['date'];
+                            $query .= " WHERE DATE(date) = '$selectedDate'";
+                        }
+
+                        // Add the status filter if a status parameter is provided
                         if (!empty($status)) {
-                            $query .= " WHERE status='$status'";
+                            if (strpos($query, 'WHERE') !== false) {
+                                $query .= " AND status='$status'";
+                            } else {
+                                $query .= " WHERE status='$status'";
+                            }
                         }
 
                         $result = mysqli_query($dlink, $query);

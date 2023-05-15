@@ -55,6 +55,7 @@ if (isset($_POST['submit'])) {
         } else {
             echo '<script>alert("Invalid file. Please upload a GIF, JPEG, or PNG image file (max 2MB).");</script>';
         }
+        
     }
 
     // Check if any fields were updated
@@ -73,6 +74,26 @@ if (isset($_POST['submit'])) {
         }
     } else {
         echo '<script>alert("No fields were updated.");</script>';
+    }
+    // Retrieve the updated quantity value from the form submission
+    $quantity = $_POST['quantity'];
+
+    // Check if the quantity value is set to 0
+    if ($quantity == 0) {
+        // Perform the database update query
+        $updateQuery = "UPDATE Products SET quantity = '$quantity' WHERE prodid = '$prodid'";
+
+        // Execute the update query
+        $result = mysqli_query($dlink, $updateQuery);
+
+        // Check if the update was successful
+        if ($result) {
+            echo '<script>alert("Product quantity updated successfully.");</script>';
+        } else {
+            echo '<script>alert("Failed to update product quantity. Please try again.");</script>';
+        }
+    } else {
+        echo '<script>alert("The quantity value is not 0. No update is performed.");</script>';
     }
 }
 
