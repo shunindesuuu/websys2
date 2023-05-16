@@ -2,6 +2,75 @@
 <!-- Website template by freewebsitetemplates.com -->
 <html>
 <style>
+    /* Styling for the pop-up form */
+    #popup-container {
+        display: none;
+        position: fixed;
+        z-index: 9990;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Semi-transparent black background */
+    }
+
+    #popup-container.open {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: rgba(38, 38, 40, 0.92);
+        color: #fff;
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+        position: relative;
+        top: 50%;
+        transform: translateY(30%);
+    }
+
+    .modal-content input {
+        height: 40px;
+        border-radius: 4px;
+    }
+
+    .modal-content .btn-primary {
+        width: 175px;
+        background-color: #ef9919;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .modal-content .btn-primary:hover {
+        background-color: #0073b7;
+    }
+
+    .logorow {
+        text-align: center;
+    }
+
+    .close {
+        margin-right: 10px;
+        margin-top: 5px;
+        color: #fff;
+        opacity: 0.8;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: #efefef;
+    }
+
     /* Container for each item */
     .item-container {
         border: 1px solid #ccc;
@@ -325,11 +394,13 @@
                                             var productDetails = JSON.parse(xhr.responseText);
 
                                             // Set the values of the form fields
+                                            document.getElementById('current-image').src = productDetails.productimage;
                                             document.getElementById('productname').value = productDetails.productname;
                                             document.getElementById('description').value = productDetails.description;
                                             document.getElementById('quantity').value = productDetails.quantity;
                                             document.getElementById('curprice').value = productDetails.curprice;
-                                            document.getElementById('prodcat').value = productDetails.prodcat; // Set product category value
+                                            document.getElementById('prodcat').value = productDetails.prodcat;
+
                                         }
                                     };
                                     xhr.send();
@@ -431,15 +502,15 @@
                         onsubmit="handleProductUpdate(event)">
                         <input type="hidden" id="prodid" name="prodid">
                         <div class="row">
-                        <div class="col-md-6">
+
+                            <div class="col-md-6">
                                 <label for="prodcat">Product Category:</label>
-                                <input class="form-control" name="prodcat" id="prodcat"
-                                    placeholder="Product Category" >
+                                <input class="form-control" name="prodcat" id="prodcat" placeholder="Product Category">
                             </div>
                             <div class="col-md-6">
                                 <label for="productname">Product Name:</label>
                                 <input class="form-control" name="productname" id="productname"
-                                    placeholder="Product Name" >
+                                    placeholder="Product Name">
                             </div>
                             <div class="col-md-6">
                                 <label for="description">Description:</label>
@@ -461,20 +532,23 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-md-6">
-                                <label for="image">Product Image:</label>
-                                <input type="file" name="image" id="image" accept="image/*">
-                            </div>
+                            <img id="current-image" src="' . $row['productimage'] . '" width="100">
                         </div>
-                        <br>
-                        <center>
-                            <input type="submit" class="btn btn-primary" name="submit" value="Save">
-                        </center>
-                    </form>
-                    <br>
+                        <div class="col-md-6">
+                            <label for="image">Product Image:</label>
+                            <input type="file" name="image" id="image" accept="image/*">
+                        </div>
+
                 </div>
+                <br>
+                <center>
+                    <input type="submit" class="btn btn-primary" name="submit" value="Save">
+                </center>
+                </form>
+                <br>
             </div>
         </div>
+    </div>
     </div>
 </body>
 

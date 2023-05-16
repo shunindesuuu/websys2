@@ -30,6 +30,10 @@ if (mysqli_num_rows($result) > 0) {
     // Fetch the product details as an associative array
     $productDetails = mysqli_fetch_assoc($result);
 
+    // Rename the fields to match the form field names
+    $productDetails['description'] = $productDetails['productdesc'];
+    $productDetails['image'] = $productDetails['productimage'];
+
     // Return the product details as a JSON response
     header('Content-Type: application/json');
     echo json_encode($productDetails);

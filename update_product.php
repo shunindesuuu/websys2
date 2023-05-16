@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
     $description = $_POST['description'];
     $quantity = $_POST['quantity'];
     $curprice = $_POST['curprice'];
-    $prodcat = $_POST['productcategory'];
+    $prodcat = $_POST['prodcat'];
 
     // Construct the update query based on the submitted form values
     $updateQuery = "UPDATE Products SET ";

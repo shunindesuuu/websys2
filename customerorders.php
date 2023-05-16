@@ -78,33 +78,38 @@
                         // Get the status parameter from the URL, defaulting to empty
                         $status = isset($_GET['status']) ? $_GET['status'] : '';
 
-                        // Retrieve the counts for each status
-                        $pendingCountQuery = "SELECT COUNT(*) AS pendingCount FROM Purchase WHERE status='Pending'";
+                        // Get the selected date from the calendar input
+                        $selectedDate = isset($_GET['date']) ? $_GET['date'] : null;
+
+                        // Retrieve the counts for each status and date combination
+                        $pendingCountQuery = "SELECT COUNT(*) AS pendingCount FROM Purchase WHERE status='Pending' " . ($selectedDate ? "AND DATE(date)='$selectedDate'" : "");
+                        $acceptedCountQuery = "SELECT COUNT(*) AS acceptedCount FROM Purchase WHERE status='Accepted' " . ($selectedDate ? "AND DATE(date)='$selectedDate'" : "");
+                        $completedCountQuery = "SELECT COUNT(*) AS completedCount FROM Purchase WHERE status='Completed' " . ($selectedDate ? "AND DATE(date)='$selectedDate'" : "");
+                        $returnRefundCountQuery = "SELECT COUNT(*) AS returnRefundCount FROM Purchase WHERE status='Return/Refund' " . ($selectedDate ? "AND DATE(date)='$selectedDate'" : "");
+
+                        // Execute count queries
                         $pendingCountResult = mysqli_query($dlink, $pendingCountQuery);
                         $pendingCountRow = mysqli_fetch_assoc($pendingCountResult);
                         $pendingCount = $pendingCountRow['pendingCount'];
 
-                        $acceptedCountQuery = "SELECT COUNT(*) AS acceptedCount FROM Purchase WHERE status='Accepted'";
                         $acceptedCountResult = mysqli_query($dlink, $acceptedCountQuery);
                         $acceptedCountRow = mysqli_fetch_assoc($acceptedCountResult);
                         $acceptedCount = $acceptedCountRow['acceptedCount'];
 
-                        $completedCountQuery = "SELECT COUNT(*) AS completedCount FROM Purchase WHERE status='Completed'";
                         $completedCountResult = mysqli_query($dlink, $completedCountQuery);
                         $completedCountRow = mysqli_fetch_assoc($completedCountResult);
                         $completedCount = $completedCountRow['completedCount'];
 
-                        $returnRefundCountQuery = "SELECT COUNT(*) AS returnRefundCount FROM Purchase WHERE status='Return/Refund'";
                         $returnRefundCountResult = mysqli_query($dlink, $returnRefundCountQuery);
                         $returnRefundCountRow = mysqli_fetch_assoc($returnRefundCountResult);
                         $returnRefundCount = $returnRefundCountRow['returnRefundCount'];
+
 
                         // Retrieve orders from the Purchase table based on the status and date
                         $query = "SELECT * FROM Purchase";
 
                         // Add the date filter if a date parameter is provided
-                        if (isset($_GET['date'])) {
-                            $selectedDate = $_GET['date'];
+                        if ($selectedDate) {
                             $query .= " WHERE DATE(date) = '$selectedDate'";
                         }
 
@@ -122,7 +127,7 @@
                         // Display the table with the orders and ability to change the status
                         if ($result && mysqli_num_rows($result) > 0) {
                             echo '<table id="customerorders-table">';
-                            echo '<tr><th><a href="customerorders.php?status=pending">Pending (' . $pendingCount . ')</a></th><th><a href="customerorders.php?status=accepted">Accepted (' . $acceptedCount . ')</a></th><th><a href="customerorders.php?status=completed">Completed (' . $completedCount . ')</a></th><th><a href="customerorders.php?status=return/refund">Return/Refund (' . $returnRefundCount . ')</a></th></tr>';
+                            echo '<tr><th><a href="customerorders.php?status=pending' . ($selectedDate ? '&date=' . $selectedDate : '') . '">Pending (' . $pendingCount . ')</a></th><th><a href="customerorders.php?status=accepted' . ($selectedDate ? '&date=' . $selectedDate : '') . '">Accepted (' . $acceptedCount . ')</a></th><th><a href="customerorders.php?status=completed' . ($selectedDate ? '&date=' . $selectedDate : '') . '">Completed (' . $completedCount . ')</a></th><th><a href="customerorders.php?status=return/refund' . ($selectedDate ? '&date=' . $selectedDate : '') . '">Return/Refund (' . $returnRefundCount . ')</a></th></tr>';
                             echo '<tr><th>Product</th><th>Quantity</th><th>Description</th><th>Total</th><th>Date Ordered</th><th>Status</th></tr>';
 
                             $totalCost = 0;
