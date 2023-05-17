@@ -6,7 +6,116 @@
 	<meta charset="UTF-8">
 	<title>Yay&#39;Koffee Website Template</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!-- Add the CSS styles -->
+	<style>
+		.modal-container {
+			display: none;
+			position: fixed;
+			z-index: 9990;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			/* Semi-transparent black background */
+		}
+
+		.modal-container.open {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.modal-content {
+			background-color: #D5CEA3;
+			color: #fff;
+			max-width: 1000px;
+			margin: auto;
+			padding: 80px;
+			box-sizing: border-box;
+			text-align: center;
+			position: relative;
+			top: 10%;
+		}
+
+		.modal-content input {
+			height: 40px;
+			border-radius: 4px;
+		}
+
+		.modal-content button {
+			padding: 8px 16px;
+			background-color: #1A120B;
+			border: none;
+			color: white;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		.modal-content .close {
+			margin-right: 10px;
+			margin-top: 5px;
+			color: #fff;
+			opacity: 0.8;
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		/* Add the rest of your CSS styles for chatContainer, message, inputContainer, messageInput, and sendButton here */
+		#chatContainer {
+			height: 400px;
+			overflow-y: scroll;
+			padding: 10px;
+		}
+
+		.message {
+			background-color: #8D7B68;
+			padding: 10px;
+			margin-bottom: 10px;
+			border-radius: 8px;
+		}
+
+		#inputContainer {
+			padding: 10px;
+			background-color: #f2f2f2;
+		}
+
+		#messageInput {
+			width: 70%;
+			padding: 8px;
+			border: none;
+			border-radius: 4px;
+			margin-right: 5px;
+		}
+
+		#sendButton {
+			padding: 8px 16px;
+			background-color: #1A120B;
+			border: none;
+			color: white;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+	</style>
 </head>
+<!-- Add the popup container -->
+<div id="popup-container" class="modal-container" style="display: none;">
+	<div id="popup-window" class="modal-content">
+		<button type="button" class="close" onclick="closeFormPopup()">&times;</button>
+		<div id="chatContainer"></div>
+		<div id="inputContainer">
+			<input type="text" id="messageInput" placeholder="Type a message...">
+			<button id="sendButton">Send</button>
+		</div>
+	</div>
+</div>
+
+
+<!-- Include the chat.js file -->
+<script src="message.js"></script>
 
 <body>
 	<div id="page">
@@ -32,10 +141,15 @@
 						<?php
 						if (isset($_COOKIE['type'])) {
 							if ($_COOKIE['type'] == 'admin') {
+								echo '<li><a href="adminproducts.php">Products</a></li>';
+								echo '<li><a href="customerorders.php">Cust Orders</a></li>';
 								echo '<li><a href="calendar.php">Calendar</a></li>';
+								echo '<li><a href="#" onclick="openFormPopup()">Open Chat</a></li>';
 							} elseif ($_COOKIE['type'] == 'customer') {
 								echo '<li><a href="menu.php">Menu</a></li>';
 								echo '<li><a href="cart.php">Cart</a></li>';
+								echo '<li><a href="myorders.php">My Orders</a></li>';
+								echo '<li><a href="#" onclick="openFormPopup()">Open Chat</a></li>';
 							}
 						}
 						?>
@@ -85,10 +199,10 @@
 
 						// End of Register
 						
+
 						// Login
-						
 						if ($_REQUEST['logging_in'] == true) {
-							$query = "select * from user where email='" . $_REQUEST['email'] . "' and paswrd='" . $_REQUEST['password'] . "'";
+							$query = "SELECT * FROM user WHERE email='" . $_REQUEST['email'] . "' AND paswrd='" . $_REQUEST['password'] . "'";
 							$result = mysql_query($query) or die(mysql_error());
 							$total_results = mysql_num_rows($result);
 							if ($total_results == 0) {
@@ -100,6 +214,7 @@
 								echo '<meta http-equiv="refresh" content="0,url=index.php?user=logged_in">';
 							}
 						}
+
 
 						// End of Login
 						
